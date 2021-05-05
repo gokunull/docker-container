@@ -6,13 +6,18 @@ on:
   push:
     branches: [ master ]
 
-jobs:
-  build:
-
+jobs: 
+  my_ci_part:
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v1
     - name: Copy repository to src
       uses: appleboy/ssh-action@master
       with:
+        host: ${{ secrets.MY_AWS_HOSTNAME }}
+        username: ${{ secrets.MY_AWS_USERNAME }}
+        key: ${{ secrets.MY_AWS_KEY }}
+        script: |
+      
+      
