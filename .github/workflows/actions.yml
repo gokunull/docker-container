@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs: 
-  my_ci_part:
+  ci_part:
     runs-on: ubuntu-latest
     
     steps:
