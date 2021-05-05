@@ -19,6 +19,7 @@ jobs:
         username: ${{ secrets.MY_AWS_USERNAME }}
         key: ${{ secrets.MY_AWS_ACCESS_KEY }}
         script: |
+          sudo rm -rf /home/ubuntu/project/temp/*; sudo rm -rf /home/ubuntu/project/src/*
           cd /home/ubuntu/project/temp ; git clone git@github.com:gokunull/docker-container.git
-          ls -la
-      
+          mv /home/ubuntu/project/temp/docker-container/* /home/ubuntu/project/src
+          docker run -dit --name static-page -p 172.31.28.116:80:80 httpd      
