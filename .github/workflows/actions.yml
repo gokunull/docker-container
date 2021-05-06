@@ -23,4 +23,4 @@ jobs:
           cd /home/ubuntu/project/temp ; git clone git@github.com:gokunull/docker-container.git
           mv /home/ubuntu/project/temp/docker-container/* /home/ubuntu/project/src
           docker stop static-page && docker rm $_   
-          docker run -dit --name static-page -p 172.31.28.116:80:80 -v /home/ubuntu/project/src/:/usr/local/apache2/htdocs/ httpd:2.4
+          docker run --restart=always -dit --name static-page -p 172.31.28.116:80:80 -v /home/ubuntu/project/src/:/usr/local/apache2/htdocs/ httpd:2.4
