@@ -1,6 +1,7 @@
-name: Docker image rebuild
+name: Docker-container rebuild
 env: 
   AWS_REGION_NAME           : "eu-central-1a"
+  PROJECT_FOLDER            : "cd /home/{{ secret.MY_AWS_USERNAME }}/project"
 
 on:
   push:
@@ -12,15 +13,30 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: Copy repository to src
+    - name: Copy repository to temporary folder
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.MY_AWS_HOSTNAME }}
         username: ${{ secrets.MY_AWS_USERNAME }}
         key: ${{ secrets.MY_AWS_ACCESS_KEY }}
         script: |
-          sudo rm -rf /home/ubuntu/project/temp/*; sudo rm -rf /home/ubuntu/project/src/*
-          cd /home/ubuntu/project/temp ; git clone git@github.com:gokunull/docker-container.git
-          mv /home/ubuntu/project/temp/docker-container/* /home/ubuntu/project/src
+          sudo rm -rf {{ env.PROJECT_FOLDER }}/temp/*; sudo rm -rf {{ env.PROJECT_FOLDER }}/src/*
+          cd {{ env.PROJECT_FOLDER }}/temp ; git clone git@github.com:gokunull/docker-container.git
+          
+  cd_part:
+    runs-on: ubuntu-latest
+    needs: [ci_part]
+   
+    steps:
+    - uses: actions/checkout@v1
+    - name: Moving files to a container
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.MY_AWS_HOSTNAME }}
+        username: ${{ secrets.MY_AWS_USERNAME }}
+        key: ${{ secrets.MY_AWS_ACCESS_KEY }}
+        script: |
+          mv {{ env.PROJECT_FOLDER }}/temp/docker-container/* {{ env.PROJECT_FOLDER }}/src
           docker stop static-page && docker rm $_   
-          docker run --restart=always -dit --name static-page -p 172.31.28.116:80:80 -v /home/ubuntu/project/src/:/usr/local/apache2/htdocs/ httpd:2.4
+          docker run --restart=always -dit --name static-page -p {{ secret.MY_AWS_IP }}:80:80 -v {{ env.PROJECT_FOLDER }}/src/:/usr/local/apache2/htdocs/ httpd:2.4
+    
