@@ -36,7 +36,7 @@ jobs:
         username: ${{ secrets.MY_AWS_USERNAME }}
         key: ${{ secrets.MY_AWS_ACCESS_KEY }}
         script: |
-          mv {{ env.PROJECT_FOLDER }}/temp/docker-container/* {{ env.PROJECT_FOLDER }}/src
+          mv {{ env.PROJECT_FOLDER }}/temp/docker-container/* {{env.PROJECT_FOLDER}}/src
           docker stop static-page && docker rm $_   
           docker run --restart=always -dit --name static-page -p {{ secret.MY_AWS_IP }}:80:80 -v {{ env.PROJECT_FOLDER }}/src/:/usr/local/apache2/htdocs/ httpd:2.4
     
