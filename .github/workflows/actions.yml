@@ -18,7 +18,7 @@ jobs:
         key: ${{ secrets.MY_AWS_ACCESS_KEY }}
         script: |
           sudo rm -rf /home/ubuntu/project/temp/*; sudo rm -rf /home/ubuntu/project/src/*
-          cd /home/ubuntu/project/temp ; git clone git@github.com:gokunull/docker-container.git
+          cd /home/ubuntu/project/temp ; git clone git@github.com:gokunull/docker-container.git && rm -rf ./*.git
   
   test_part:
     runs-on: ubuntu-latest
